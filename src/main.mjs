@@ -20,7 +20,7 @@
 
 import { readFileSync, existsSync, appendFileSync, writeFileSync } from "node:fs";
 import { resolve as resolvePath } from "node:path";
-import { runCustody } from "./custody.mjs";
+import { runCustody, UA } from "./custody.mjs";
 
 const TIMEOUT_MS = 60_000;
 const CAVEAT =
@@ -105,7 +105,9 @@ async function callBatch(api, body) {
   const url = `${api.replace(/\/$/, "")}/api/preflight/batch`;
   const res = await fetch(url, {
     method: "POST",
-    headers: { "content-type": "application/json", "user-agent": "SatoHub-preflight-action/1" },
+    // One user-agent for every call (custody.mjs UA): the published name by
+    // default, SATO_CHECK_UA when Sato Hub's own CI runs the Action.
+    headers: { "content-type": "application/json", "user-agent": UA },
     body: JSON.stringify(body),
     signal: AbortSignal.timeout(TIMEOUT_MS),
   });

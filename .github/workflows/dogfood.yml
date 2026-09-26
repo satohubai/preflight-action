@@ -21,6 +21,10 @@ permissions:
 jobs:
   dogfood:
     runs-on: ubuntu-latest
+    env:
+      # This is Sato Hub's own CI: identify as ours so these runs are never
+      # counted as outside use of the Action (every call reads this).
+      SATO_CHECK_UA: SatoHub-ci/1.0
     steps:
       - uses: actions/checkout@v4
 
